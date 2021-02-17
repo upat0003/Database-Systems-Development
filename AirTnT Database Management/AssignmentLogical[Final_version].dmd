@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="AssignmentLogical[Final_version]" id="07C44D9E-E12E-12D9-4E0A-46FFE4835C05" version="3.5">
+<createdBy>Utkarsh</createdBy>
+<createdTime>2019-04-30 06:10:31 UTC</createdTime>
+<ownerDesignName>AssignmentLogical</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>07C44D9E-E12E-12D9-4E0A-46FFE4835C05</designId>
+</OSDM_Design>

@@ -1,0 +1,890 @@
+SQL> 
+SQL> 
+SQL> DROP SEQUENCE customer_customer_id_sequencess;
+
+Sequence CUSTOMER_CUSTOMER_ID_SEQUENCESS dropped.
+
+SQL> 
+SQL> DROP SEQUENCE housekeeper_housekeeper_id_sequencess;
+
+Sequence HOUSEKEEPER_HOUSEKEEPER_ID_SEQUENCESS dropped.
+
+SQL> 
+SQL> DROP SEQUENCE houseshare_facility_houseshare_sequencess;
+
+Sequence HOUSESHARE_FACILITY_HOUSESHARE_SEQUENCESS dropped.
+
+SQL> 
+SQL> DROP SEQUENCE tour_guide_detail_tour_guide_id_sqeuencess;
+
+Sequence TOUR_GUIDE_DETAIL_TOUR_GUIDE_ID_SQEUENCESS dropped.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> DROP TABLE activity_details CASCADE CONSTRAINTS;
+
+Table ACTIVITY_DETAILS dropped.
+
+SQL> 
+SQL> DROP TABLE cost_centre CASCADE CONSTRAINTS;
+
+Table COST_CENTRE dropped.
+
+SQL> 
+SQL> DROP TABLE customer CASCADE CONSTRAINTS;
+
+Table CUSTOMER dropped.
+
+SQL> 
+SQL> DROP TABLE customer_check_in CASCADE CONSTRAINTS;
+
+Table CUSTOMER_CHECK_IN dropped.
+
+SQL> 
+SQL> DROP TABLE housekeeper CASCADE CONSTRAINTS;
+
+Table HOUSEKEEPER dropped.
+
+SQL> 
+SQL> DROP TABLE housekeeper_assigning CASCADE CONSTRAINTS;
+
+Table HOUSEKEEPER_ASSIGNING dropped.
+
+SQL> 
+SQL> DROP TABLE houseshare_facility CASCADE CONSTRAINTS;
+
+Table HOUSESHARE_FACILITY dropped.
+
+SQL> 
+SQL> DROP TABLE item CASCADE CONSTRAINTS;
+
+Table ITEM dropped.
+
+SQL> 
+SQL> DROP TABLE room CASCADE CONSTRAINTS;
+
+Table ROOM dropped.
+
+SQL> 
+SQL> DROP TABLE tour_guide_detail CASCADE CONSTRAINTS;
+
+Table TOUR_GUIDE_DETAIL dropped.
+
+SQL> 
+SQL> DROP TABLE tour_guide_specialisation CASCADE CONSTRAINTS;
+
+Table TOUR_GUIDE_SPECIALISATION dropped.
+
+SQL> 
+SQL> CREATE TABLE activity_details (
+  2      activity_performed_date_time       DATE NOT NULL,
+  3      activity_current_standard_cost     NUMBER(5, 2) NOT NULL,
+  4      activity_name                      VARCHAR2(50) NOT NULL,
+  5      activity_description               VARCHAR2(50) NOT NULL,
+  6      activity_code                      NUMBER(5) NOT NULL,
+  7      "Activity_time_required_(Hours)"   NUMBER(3, 2) NOT NULL,
+  8      customer_id                        NUMBER(6) NOT NULL,
+  9      tour_guide_id                      NUMBER(4) NOT NULL,
+ 10      check_in_date_time                 DATE NOT NULL
+ 11  );
+
+Table ACTIVITY_DETAILS created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.activity_performed_date_time IS
+  2      'The date and time activity took place is recorded in Activity_performed_date_time.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.activity_current_standard_cost IS
+  2      'Activity_current_standard_cost is the charge to the customer for activity which is counted based on the date/time of the activity and activity code.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.activity_name IS
+  2      'Activity_name is the name of the activity which is identified by the code of the activity';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.activity_description IS
+  2      'Activity_description has all the description for the activity which contains the full activity details';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.activity_code IS
+  2      'Activity_code is the 5 digit code uniquely allocated by AirTnT to all the activities. So, it will be used to uniquely identify all the activities and it''s primary key for Activity_details '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details."Activity_time_required_(Hours)" IS
+  2      'Activity_time_required_[Hours] is recorded in hours which gives information of how long it took to perfrom this activity';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.tour_guide_id IS
+  2      'Tour_guide_id uniquely identifies all the tour guides so it''s primary key. It''s 4 digit numerical number allocated to all the tour guides'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN activity_details.check_in_date_time IS
+  2      'Check_in_date_time is the derived attribute having date and time of the customer check in. It will be primary because it will uniquely identify the date and time of check-in for each customer.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE activity_details
+  2      ADD CONSTRAINT activity_details_pk PRIMARY KEY ( customer_id,
+  3                                                       check_in_date_time,
+  4                                                       activity_performed_date_time,
+  5                                                       activity_code );
+
+Table ACTIVITY_DETAILS altered.
+
+SQL> 
+SQL> CREATE TABLE cost_centre (
+  2      cost_centre_code         VARCHAR2(20) NOT NULL,
+  3      cost_centre_title        VARCHAR2(50) NOT NULL,
+  4      admin_team_member_name   VARCHAR2(50) NOT NULL,
+  5      item_current_stock       NUMBER(5) NOT NULL
+  6  );
+
+Table COST_CENTRE created.
+
+SQL> 
+SQL> ALTER TABLE cost_centre ADD CONSTRAINT cost_centre_stock CHECK ( item_current_stock > - 1 );
+
+Table COST_CENTRE altered.
+
+SQL> 
+SQL> COMMENT ON COLUMN cost_centre.cost_centre_code IS
+  2      'Cost centre is uniquely identified by Cost_centre_id which is primary key. Multiple items can be assigned to the cost centre.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN cost_centre.cost_centre_title IS
+  2      'Cost_centre_title is the the name of the cost centre where items are assigned. Cosr centre works as having section of items and this section is named by Cost_centre_title. '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN cost_centre.admin_team_member_name IS
+  2      'Admin team member name is in charge of buying item stock whenever cost centre is running out of items. The person is identified by Admin_team_member_name.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN cost_centre.item_current_stock IS
+  2      'Item_current_stock is the current available items in the cost centre.';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE cost_centre ADD CONSTRAINT cost_centre_pk PRIMARY KEY ( cost_centre_code );
+
+Table COST_CENTRE altered.
+
+SQL> 
+SQL> CREATE TABLE customer (
+  2      customer_id                     NUMBER(6) NOT NULL,
+  3      customer_fname                  VARCHAR2(50) NOT NULL,
+  4      customer_lname                  VARCHAR2(50) NOT NULL,
+  5      customer_address                VARCHAR2(50) NOT NULL,
+  6      customer_dob                    DATE NOT NULL,
+  7      customer_passport_no            VARCHAR2(10) NOT NULL,
+  8      customer_b_acc_no               VARCHAR2(50) NOT NULL,
+  9      customer_current_mobile_no      CHAR(10) NOT NULL,
+ 10      customer_emergency_contact_no   CHAR(10) NOT NULL,
+ 11      check_out_date_time             DATE NOT NULL
+ 12  );
+
+Table CUSTOMER created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_fname IS
+  2      'Customer_fname is the first name of the customer limited to 50 letters.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_lname IS
+  2      'Customer_lname is the last name of the customerlimited to 50 letters.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_address IS
+  2      'Customer_address is the home address  of the customer limited to 50 letters.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_dob IS
+  2      'Customer_dob is the date of birth of the customer';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_passport_no IS
+  2      'Customer_passport_no is the passport no of the customer which is used to identify the customer details. It is used in the case of identity verification and it is the unique identifier'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_b_acc_no IS
+  2      '(Customer_B_Acc_No) Customer_bank_account_holder_name is the name of the bank account held by customer. It is used to identify the payment verification. Whenever customer pays for the bill, Customer_bank_account_holder_name is used to uniquely verify the payment details. '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_current_mobile_no IS
+  2      'Customer_current_mobile_no is the mobile number of the customer which must be 10 digits.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.customer_emergency_contact_no IS
+  2      'Customer_emergency_contact_no is the mobile number of the customer that may be used in case of the customer emergency which must be 10 digits.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer.check_out_date_time IS
+  2      'Check_out_date_time records the time and date when customer checks out of the facility.';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE customer ADD CONSTRAINT customer_pk PRIMARY KEY ( customer_id );
+
+Table CUSTOMER altered.
+
+SQL> 
+SQL> CREATE TABLE customer_check_in (
+  2      check_in_date_time   DATE NOT NULL,
+  3      customer_id          NUMBER(6) NOT NULL,
+  4      tour_guide_id        NUMBER(4) NOT NULL
+  5  );
+
+Table CUSTOMER_CHECK_IN created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer_check_in.check_in_date_time IS
+  2      'Check_in_date_time is the derived attribute having date and time of the customer check in. It will be primary because it will uniquely identify the date and time of check-in for each customer.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer_check_in.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN customer_check_in.tour_guide_id IS
+  2      'Tour_guide_id uniquely identifies all the tour guides so it''s primary key. It''s 4 digit numerical number allocated to all the tour guides'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE customer_check_in ADD CONSTRAINT customer_check_in_pk PRIMARY KEY ( customer_id,
+  2                                                                                  check_in_date_time );
+
+Table CUSTOMER_CHECK_IN altered.
+
+SQL> 
+SQL> CREATE TABLE housekeeper (
+  2      housekeeper_id                  NUMBER(4) NOT NULL,
+  3      housekeeper_fname               VARCHAR2(50) NOT NULL,
+  4      housekeeper_lname               VARCHAR2(50) NOT NULL,
+  5      housekeeper_contact_no          CHAR(10) NOT NULL,
+  6      housekeeper_police_check_code   VARCHAR2(20) NOT NULL,
+  7      housekeeper_bcc                 CHAR(1) NOT NULL
+  8  );
+
+Table HOUSEKEEPER created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_id IS
+  2      'HouseKeeper_id is the 4 digit numeric assigned to each houseKeeper which is used to identify all the houseKeeper. It;s unique so HouseKeeper_id will be primary key'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_fname IS
+  2      'HouseKeeper_fname is the first name of the particular houseKeeper';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_lname IS
+  2      'HouseKeeper_lname is the last name of the particular houseKeeper';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_contact_no IS
+  2      'HouseKeeper_contact_no is the contact number  of the particular houseKeeper';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_police_check_code IS
+  2      'HouseKeeper_police_check_code is the alphanumberical police Check code number if it''s available for houseKeeper.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper.housekeeper_bcc IS
+  2      'HouseKeeper_Bankruptcy_check_passed[BCC] is the boolean used to check whether Bankruptcy check is passed for houseKeeper.It''s recorded as yes or no'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE housekeeper ADD CONSTRAINT housekeeper_pk PRIMARY KEY ( housekeeper_id );
+
+Table HOUSEKEEPER altered.
+
+SQL> 
+SQL> CREATE TABLE housekeeper_assigning (
+  2      housekeeper_assigned_date    DATE NOT NULL,
+  3      housekeeper_completed_date   DATE NOT NULL,
+  4      housekeeper_id               NUMBER(4) NOT NULL,
+  5      houseshare_code              NUMBER(5) NOT NULL
+  6  );
+
+Table HOUSEKEEPER_ASSIGNING created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper_assigning.housekeeper_assigned_date IS
+  2      'HouseKeeper_assigned_date is the date when houseKeeper are assigned to houseShare and it''s recorded';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper_assigning.housekeeper_completed_date IS
+  2      'HouseKeeper_completed_date is the completed date when the houseKeeper is done with working in the particular houseShare';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper_assigning.housekeeper_id IS
+  2      'HouseKeeper_id is the 4 digit numeric assigned to each houseKeeper which is used to identify all the houseKeeper. It;s unique so HouseKeeper_id will be primary key'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN housekeeper_assigning.houseshare_code IS
+  2      'HouseShare is identified by HouseShare_code. All the houseShare are assigned unique numerical code so it''s primary for houseShare_facility.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX housekeeper_assigning__idx ON
+  2      housekeeper_assigning (
+  3          housekeeper_id
+  4      ASC );
+
+INDEX HOUSEKEEPER_ASSIGNING__IDX created.
+
+SQL> 
+SQL> ALTER TABLE housekeeper_assigning
+  2      ADD CONSTRAINT housekeeper_assigning_pk PRIMARY KEY ( houseshare_code,
+  3                                                            housekeeper_id,
+  4                                                            housekeeper_assigned_date );
+
+Table HOUSEKEEPER_ASSIGNING altered.
+
+SQL> 
+SQL> CREATE TABLE houseshare_facility (
+  2      houseshare_code          NUMBER(5) NOT NULL,
+  3      houseshare_name          VARCHAR2(50) NOT NULL,
+  4      houseshare_total_rooms   NUMBER(2) NOT NULL,
+  5      houseshare_avail_rooms   NUMBER(2) NOT NULL
+  6  );
+
+Table HOUSESHARE_FACILITY created.
+
+SQL> 
+SQL> ALTER TABLE houseshare_facility ADD CONSTRAINT houseshare_rooms CHECK ( houseshare_total_rooms > 0 );
+
+Table HOUSESHARE_FACILITY altered.
+
+SQL> 
+SQL> COMMENT ON COLUMN houseshare_facility.houseshare_code IS
+  2      'HouseShare is identified by HouseShare_code. All the houseShare are assigned unique numerical code so it''s primary for houseShare_facility.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN houseshare_facility.houseshare_name IS
+  2      'HouseShare_name has the name of the houseShare which is based on houseShare_code.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN houseshare_facility.houseshare_total_rooms IS
+  2      'HouseShare is having multiple rooms so HouseShare_total_rooms will give the number of rooms in total for the given houseShare'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN houseshare_facility.houseshare_avail_rooms IS
+  2      ' HouseShare_availl_rooms will give the number of rooms availablle for the given houseShare and it''s recorded by this.';
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE houseshare_facility ADD CONSTRAINT houseshare_facility_pk PRIMARY KEY ( houseshare_code );
+
+Table HOUSESHARE_FACILITY altered.
+
+SQL> 
+SQL> CREATE TABLE item (
+  2      item_code                      VARCHAR2(15) NOT NULL,
+  3      item_name                      VARCHAR2(50) NOT NULL,
+  4      item_description               VARCHAR2(50) NOT NULL,
+  5      item_used_quantity             NUMBER(4) NOT NULL,
+  6      item_price                     NUMBER(5, 2) NOT NULL,
+  7      customer_id                    NUMBER(6) NOT NULL,
+  8      cost_centre_code               VARCHAR2(20) NOT NULL,
+  9      item_price_total_extra         NUMBER(5, 2) NOT NULL,
+ 10      check_in_date_time             DATE NOT NULL,
+ 11      activity_performed_date_time   DATE NOT NULL,
+ 12      activity_code                  NUMBER(5) NOT NULL
+ 13  );
+
+Table ITEM created.
+
+SQL> 
+SQL> ALTER TABLE item ADD CONSTRAINT item_iuq CHECK ( item_used_quantity > 0 );
+
+Table ITEM altered.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_code IS
+  2      'Item is uniquely identified by the Item_code so it''s primary key. Item code can be the code of combination of numbers and letters.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_name IS
+  2      'Item_name is identified by item code which is based on the primary key.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_description IS
+  2      'Item_description has all the description of item in detail of the given item being used in the activity';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_used_quantity IS
+  2      'The number of item used in the activity is Item_used_quantity and that depends on the customer and activity details.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_price IS
+  2      'Item_price is identified Item details and quantity too. The customers are charged based on the item they used.The price will vary based on the quantity being used'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.cost_centre_code IS
+  2      'Cost centre is uniquely identified by Cost_centre_id which is primary key. Multiple items can be assigned to the cost centre.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.item_price_total_extra IS
+  2      'Item_price_total_extra is derived attributed which is counted based on item price and quantity. So it''s recorded as total extra charge for using the item in the activity. '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.check_in_date_time IS
+  2      'Check_in_date_time is the derived attribute having date and time of the customer check in. It will be primary because it will uniquely identify the date and time of check-in for each customer.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.activity_performed_date_time IS
+  2      'The date and time activity took place is recorded in Activity_performed_date_time.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN item.activity_code IS
+  2      'Activity_code is the 5 digit code uniquely allocated by AirTnT to all the activities. So, it will be used to uniquely identify all the activities and it''s primary key for Activity_details '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE item
+  2      ADD CONSTRAINT item_pk PRIMARY KEY ( customer_id,
+  3                                           check_in_date_time,
+  4                                           activity_performed_date_time,
+  5                                           activity_code,
+  6                                           item_code );
+
+Table ITEM altered.
+
+SQL> 
+SQL> CREATE TABLE room (
+  2      room_number          NUMBER(2) NOT NULL,
+  3      room_voip_no         CHAR(10) NOT NULL,
+  4      room_type            VARCHAR2(50) NOT NULL,
+  5      houseshare_code      NUMBER(5) NOT NULL,
+  6      customer_id          NUMBER(6) NOT NULL,
+  7      check_in_date_time   DATE NOT NULL
+  8  );
+
+Table ROOM created.
+
+SQL> 
+SQL> ALTER TABLE room ADD CONSTRAINT room_no CHECK ( room_number > 0 );
+
+Table ROOM altered.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.room_number IS
+  2      'Room_number is identified by Room number and the houseShare code so they are the primary keys for the Room entity. Room number starts from 1.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.room_voip_no IS
+  2      'Room_VOIP_no is installed in some rooms but  not mandatory in every rooms so it can be null.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.room_type IS
+  2      'Room_type is the type of room so it can be fixed plan or open plan or any other type. fixed_pan=0 and open_plan=1';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.houseshare_code IS
+  2      'HouseShare is identified by HouseShare_code. All the houseShare are assigned unique numerical code so it''s primary for houseShare_facility.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN room.check_in_date_time IS
+  2      'Check_in_date_time is the derived attribute having date and time of the customer check in. It will be primary because it will uniquely identify the date and time of check-in for each customer.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE room
+  2      ADD CONSTRAINT room_pk PRIMARY KEY ( customer_id,
+  3                                           check_in_date_time,
+  4                                           room_number,
+  5                                           houseshare_code );
+
+Table ROOM altered.
+
+SQL> 
+SQL> CREATE TABLE tour_guide_detail (
+  2      tour_guide_id                  NUMBER(4) NOT NULL,
+  3      tour_guide_fname               VARCHAR2(50) NOT NULL,
+  4      tour_guide_lname               VARCHAR2(50) NOT NULL,
+  5      tour_guide_insta_handler       VARCHAR2(20) NOT NULL,
+  6      customer_id                    NUMBER(6) NOT NULL,
+  7      check_in_date_time             DATE NOT NULL,
+  8      activity_performed_date_time   DATE NOT NULL,
+  9      activity_code                  NUMBER(5) NOT NULL
+ 10  );
+
+Table TOUR_GUIDE_DETAIL created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.tour_guide_id IS
+  2      'Tour_guide_id uniquely identifies all the tour guides so it''s primary key. It''s 4 digit numerical number allocated to all the tour guides'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.tour_guide_fname IS
+  2      'Tour_guide_fname is the first name of the tour guide ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.tour_guide_lname IS
+  2      'Tour_guide_lname is the last name of the tour guide ';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.tour_guide_insta_handler IS
+  2      'Tour_guide_insta_handler  is the instagram id  of the tour guide which will have all the instagram posts and stories covered by tour guide '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.customer_id IS
+  2      'Customer_id is the numerical ( 6 digits)  unique id for the customer which is used to identify them so it''s primary key as it will be unique.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.check_in_date_time IS
+  2      'Check_in_date_time is the derived attribute having date and time of the customer check in. It will be primary because it will uniquely identify the date and time of check-in for each customer.'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.activity_performed_date_time IS
+  2      'The date and time activity took place is recorded in Activity_performed_date_time.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_detail.activity_code IS
+  2      'Activity_code is the 5 digit code uniquely allocated by AirTnT to all the activities. So, it will be used to uniquely identify all the activities and it''s primary key for Activity_details '
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX tour_guide_detail__idx ON
+  2      tour_guide_detail (
+  3          customer_id
+  4      ASC,
+  5          check_in_date_time
+  6      ASC,
+  7          activity_performed_date_time
+  8      ASC,
+  9          activity_code
+ 10      ASC );
+
+INDEX TOUR_GUIDE_DETAIL__IDX created.
+
+SQL> 
+SQL> ALTER TABLE tour_guide_detail ADD CONSTRAINT tour_guide_detail_pk PRIMARY KEY ( tour_guide_id );
+
+Table TOUR_GUIDE_DETAIL altered.
+
+SQL> 
+SQL> CREATE TABLE tour_guide_specialisation (
+  2      specialisation_name   VARCHAR2(50) NOT NULL,
+  3      tour_guide_id         NUMBER(4) NOT NULL
+  4  );
+
+Table TOUR_GUIDE_SPECIALISATION created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_specialisation.specialisation_name IS
+  2      'Specialisation_name is all the names for specialisation and tour guide have got one or many specialisation';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN tour_guide_specialisation.tour_guide_id IS
+  2      'Tour_guide_id uniquely identifies all the tour guides so it''s primary key. It''s 4 digit numerical number allocated to all the tour guides'
+  3  ;
+
+Comment created.
+
+SQL> 
+SQL> ALTER TABLE tour_guide_specialisation ADD CONSTRAINT tour_guide_specialisation_pk PRIMARY KEY ( tour_guide_id,
+  2                                                                                                  specialisation_name );
+
+Table TOUR_GUIDE_SPECIALISATION altered.
+
+SQL> 
+SQL> ALTER TABLE activity_details
+  2      ADD CONSTRAINT activities_check_in FOREIGN KEY ( customer_id,
+  3                                                       check_in_date_time )
+  4          REFERENCES customer_check_in ( customer_id,
+  5                                         check_in_date_time );
+
+Table ACTIVITY_DETAILS altered.
+
+SQL> 
+SQL> ALTER TABLE activity_details
+  2      ADD CONSTRAINT activity_managed_by FOREIGN KEY ( tour_guide_id )
+  3          REFERENCES tour_guide_detail ( tour_guide_id );
+
+Table ACTIVITY_DETAILS altered.
+
+SQL> 
+SQL> ALTER TABLE item
+  2      ADD CONSTRAINT activity_may_require_item FOREIGN KEY ( customer_id,
+  3                                                             check_in_date_time,
+  4                                                             activity_performed_date_time,
+  5                                                             activity_code )
+  6          REFERENCES activity_details ( customer_id,
+  7                                        check_in_date_time,
+  8                                        activity_performed_date_time,
+  9                                        activity_code );
+
+Table ITEM altered.
+
+SQL> 
+SQL> ALTER TABLE tour_guide_detail
+  2      ADD CONSTRAINT activity_performed_by FOREIGN KEY ( customer_id,
+  3                                                         check_in_date_time,
+  4                                                         activity_performed_date_time,
+  5                                                         activity_code )
+  6          REFERENCES activity_details ( customer_id,
+  7                                        check_in_date_time,
+  8                                        activity_performed_date_time,
+  9                                        activity_code );
+
+Table TOUR_GUIDE_DETAIL altered.
+
+SQL> 
+SQL> ALTER TABLE customer_check_in
+  2      ADD CONSTRAINT customer_checking_in FOREIGN KEY ( customer_id )
+  3          REFERENCES customer ( customer_id );
+
+Table CUSTOMER_CHECK_IN altered.
+
+SQL> 
+SQL> ALTER TABLE housekeeper_assigning
+  2      ADD CONSTRAINT housekeeper_allocated FOREIGN KEY ( housekeeper_id )
+  3          REFERENCES housekeeper ( housekeeper_id );
+
+Table HOUSEKEEPER_ASSIGNING altered.
+
+SQL> 
+SQL> ALTER TABLE housekeeper_assigning
+  2      ADD CONSTRAINT houseshare_assigned FOREIGN KEY ( houseshare_code )
+  3          REFERENCES houseshare_facility ( houseshare_code );
+
+Table HOUSEKEEPER_ASSIGNING altered.
+
+SQL> 
+SQL> ALTER TABLE room
+  2      ADD CONSTRAINT houseshare_having_room FOREIGN KEY ( houseshare_code )
+  3          REFERENCES houseshare_facility ( houseshare_code );
+
+Table ROOM altered.
+
+SQL> 
+SQL> ALTER TABLE item
+  2      ADD CONSTRAINT item_cost_centre FOREIGN KEY ( cost_centre_code )
+  3          REFERENCES cost_centre ( cost_centre_code )
+  4              ON DELETE CASCADE;
+
+Table ITEM altered.
+
+SQL> 
+SQL> ALTER TABLE customer_check_in
+  2      ADD CONSTRAINT main_tour_guide FOREIGN KEY ( tour_guide_id )
+  3          REFERENCES tour_guide_detail ( tour_guide_id );
+
+Table CUSTOMER_CHECK_IN altered.
+
+SQL> 
+SQL> ALTER TABLE room
+  2      ADD CONSTRAINT rooms_assigned_at_check_in FOREIGN KEY ( customer_id,
+  3                                                              check_in_date_time )
+  4          REFERENCES customer_check_in ( customer_id,
+  5                                         check_in_date_time )
+  6              ON DELETE CASCADE;
+
+Table ROOM altered.
+
+SQL> 
+SQL> ALTER TABLE tour_guide_specialisation
+  2      ADD CONSTRAINT tour_guide_specialising FOREIGN KEY ( tour_guide_id )
+  3          REFERENCES tour_guide_detail ( tour_guide_id );
+
+Table TOUR_GUIDE_SPECIALISATION altered.
+
+SQL> 
+SQL> CREATE SEQUENCE customer_customer_id_sequencess  START WITH 1 NOCACHE ORDER;
+
+Sequence CUSTOMER_CUSTOMER_ID_SEQUENCESS created.
+
+SQL> 
+SQL> CREATE SEQUENCE housekeeper_housekeeper_id_sequencess START WITH 1 NOCACHE ORDER;
+
+Sequence HOUSEKEEPER_HOUSEKEEPER_ID_SEQUENCESS created.
+
+SQL> 
+SQL> CREATE SEQUENCE houseshare_facility_houseshare_sequencess   START WITH 1 NOCACHE ORDER;
+
+Sequence HOUSESHARE_FACILITY_HOUSESHARE_SEQUENCESS created.
+
+SQL> 
+SQL> CREATE SEQUENCE tour_guide_detail_tour_guide_id_sqeuencess   START WITH 1 NOCACHE ORDER;
+
+Sequence TOUR_GUIDE_DETAIL_TOUR_GUIDE_ID_SQEUENCESS created.
+
+SQL> 
+SQL> spool off
